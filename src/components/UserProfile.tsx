@@ -6,7 +6,7 @@ export const UserProfile = () => {
 
   // Verificación de seguridad básica
   useEffect(() => {
-    if (address && chainId !== 6281971) {
+    if (address && chainId !== "6281971") {
       alert("¡Estás en la red equivocada! Por favor cambia a DogeOS Testnet.");
     }
   }, [chainId, address]);
@@ -14,10 +14,11 @@ export const UserProfile = () => {
   if (!address) return null;
 
   const handleSign = async () => {
+    if (!signMessage) return;
     try {
-      // Ejemplo de firma criptográfica segura (MPC) [9, 10]
       const sig = await signMessage({ message: "Hola DogeOS" });
-      alert(`Mensaje firmado: ${sig.slice(0, 20)}...`);
+      const sigStr = typeof sig === 'string' ? sig : Buffer.from(sig).toString('hex');
+      alert(`Mensaje firmado: ${sigStr.slice(0, 20)}...`);
     } catch (e) {
       console.error(e);
     }
@@ -26,7 +27,7 @@ export const UserProfile = () => {
   return (
     <div style={{ marginTop: '20px' }}>
       <h3>Tus Datos en Chain {chainId}</h3>
-      <p>💰 Saldo: <strong>{balance?.formatted} {balance?.symbol}</strong></p>
+      <p>💰 Saldo: <strong>{balance ?? '0'} DOGE</strong></p>
       <button onClick={handleSign}>Firmar Mensaje de Prueba</button>
     </div>
   );

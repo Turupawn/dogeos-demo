@@ -1,13 +1,13 @@
-import { useWalletConnect } from "@dogeos/dogeos-sdk";
+import { useWalletConnect, useAccount } from "@dogeos/dogeos-sdk";
 
 export const ConnectButton = () => {
-  const { 
-    openModal,    // Abre el modal de Social Login (Twitter, Google, etc.) [7]
-    disconnect, 
-    isConnected, 
-    address,      // Dirección 0x... del usuario
-    isConnecting 
+  const {
+    openModal,
+    disconnect,
+    isConnected,
+    isConnecting
   } = useWalletConnect();
+  const { address } = useAccount();
 
   if (isConnecting) {
     return <button disabled>Cargando DogeOS...</button>;

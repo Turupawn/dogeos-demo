@@ -25,31 +25,27 @@ export const dogeosTestnet = defineChain({
 
 // 2. Configuración para el SDK de DogeOS (WalletConnect)
 export const sdkConfig = {
-  // En producción, obtén esto en el panel de desarrolladores. Para local usa un string cualquiera.
-  clientId: "z9DbzaoWVo1p852i0bwcNZp7kKFtKQisO5XpYQUUdfPdeSF6nE4TPUTxA5ysEv5JafUW4ciw1jllmxQAaD8ER1oE", 
-  
-  chains: [
-    {
-      id: 6281971,
-      name: 'DogeOS Testnet',
-      rpcUrls: {
-        default: { http: ['https://rpc-testnet.dogeos.com'] },
-        public: { http: ['https://rpc-testnet.dogeos.com'] },
-      },
-      nativeCurrency: { 
-        name: 'Dogecoin', 
-        symbol: 'DOGE', 
-        decimals: 18 
-      },
-    }
-  ],
-  walletConnectConfig: {
-    projectId: "TU_PROJECT_ID_WC", // Consigue uno gratis en walletconnect.com si el default falla
-    metadata: {
-      name: "Mi Primera DogeOS dApp",
-      description: "Probando el SDK",
-      url: "http://localhost:5173",
-      icons: ["https://avatars.githubusercontent.com/u/37784886"]
-    }
+  clientId: "z9DbzaoWVo1p852i0bwcNZp7kKFtKQisO5XpYQUUdfPdeSF6nE4TPUTxA5ysEv5JafUW4ciw1jllmxQAaD8ER1oE",
+  chains: {
+    evm: [
+      {
+        id: 6281971,
+        name: 'DogeOS Testnet',
+        rpcUrls: {
+          default: { http: ['https://rpc-testnet.dogeos.com'] },
+        },
+        nativeCurrency: {
+          name: 'Dogecoin',
+          symbol: 'DOGE',
+          decimals: 18
+        },
+      }
+    ]
+  },
+  metadata: {
+    name: "Mi Primera DogeOS dApp",
+    description: "Probando el SDK",
+    url: "http://localhost:5173",
+    icons: ["https://avatars.githubusercontent.com/u/37784886"]
   }
 };
