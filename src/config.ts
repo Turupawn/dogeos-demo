@@ -26,7 +26,7 @@ export const dogeosTestnet = defineChain({
 // 2. Configuración para el SDK de DogeOS (WalletConnect)
 export const sdkConfig = {
   // En producción, obtén esto en el panel de desarrolladores. Para local usa un string cualquiera.
-  clientId: "TU_CLIENT_ID_TEMPORAL", 
+  clientId: "z9DbzaoWVo1p852i0bwcNZp7kKFtKQisO5XpYQUUdfPdeSF6nE4TPUTxA5ysEv5JafUW4ciw1jllmxQAaD8ER1oE", 
   
   chains: [
     {
