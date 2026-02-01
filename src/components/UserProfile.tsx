@@ -1,8 +1,9 @@
 import { useAccount } from "@dogeos/dogeos-sdk";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const UserProfile = () => {
-  const { address, balance, chainId, signMessage } = useAccount();
+  const { address, balance, chainId, currentProvider, chainType } = useAccount();
+  const [signing, setSigning] = useState(false);
 
   // Verificación de seguridad básica
   useEffect(() => {
@@ -13,14 +14,52 @@ export const UserProfile = () => {
 
   if (!address) return null;
 
-  const handleSign = async () => {
-    if (!signMessage) return;
+  // Firmar mensaje usando currentProvider (funciona con Twitter/social login)
+  const handleSignMessage = async () => {
+    if (!currentProvider || chainType !== "evm") {
+      alert("No hay provider EVM disponible");
+      return;
+    }
+
+    setSigning(true);
     try {
-      const sig = await signMessage({ message: "Hola DogeOS" });
-      const sigStr = typeof sig === 'string' ? sig : Buffer.from(sig).toString('hex');
-      alert(`Mensaje firmado: ${sigStr.slice(0, 20)}...`);
+      const message = "Hola DogeOS - Mensaje de prueba";
+      const sig = await currentProvider.request({
+        method: "personal_sign",
+        params: [message, address],
+      });
+      alert(`Mensaje firmado exitosamente:\n${sig.slice(0, 30)}...`);
     } catch (e) {
-      console.error(e);
+      console.error("Error al firmar:", e);
+      alert(`Error al firmar: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setSigning(false);
+    }
+  };
+
+  // Enviar transacción de prueba (0 DOGE a ti mismo)
+  const handleSendTransaction = async () => {
+    if (!currentProvider || chainType !== "evm") {
+      alert("No hay provider EVM disponible");
+      return;
+    }
+
+    setSigning(true);
+    try {
+      const txHash = await currentProvider.request({
+        method: "eth_sendTransaction",
+        params: [{
+          from: address,
+          to: address, // Enviando a ti mismo como prueba
+          value: "0x0", // 0 DOGE
+        }],
+      });
+      alert(`Transacción enviada:\n${txHash}`);
+    } catch (e) {
+      console.error("Error en transacción:", e);
+      alert(`Error: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setSigning(false);
     }
   };
 
@@ -28,7 +67,14 @@ export const UserProfile = () => {
     <div style={{ marginTop: '20px' }}>
       <h3>Tus Datos en Chain {chainId}</h3>
       <p>💰 Saldo: <strong>{balance ?? '0'} DOGE</strong></p>
-      <button onClick={handleSign}>Firmar Mensaje de Prueba</button>
+      <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+        <button onClick={handleSignMessage} disabled={signing}>
+          {signing ? 'Firmando...' : 'Firmar Mensaje'}
+        </button>
+        <button onClick={handleSendTransaction} disabled={signing}>
+          {signing ? 'Enviando...' : 'Enviar TX (0 DOGE)'}
+        </button>
+      </div>
     </div>
   );
 };
